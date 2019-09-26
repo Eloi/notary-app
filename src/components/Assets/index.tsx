@@ -2,14 +2,14 @@ import React from 'react'
 import Layout from '../Layout'
 
 
-const Home: React.FC = () => {
+const Assets: React.FC = () => {
     return (
-      <Layout selected="welcome">
+      <Layout selected="assets">
           <div>
-              HOME
+              ASSETS
           </div>
       </Layout>
     )
   }
 
-export default Home
+export default Assets
