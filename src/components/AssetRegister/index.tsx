@@ -10,7 +10,6 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 
 import Layout from '../Layout'
 
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -52,10 +51,16 @@ const AssetRegister: React.FC = () => {
   const [formValid, setFormValid] = useState(false)
 
   useEffect(() => {
-    if (docHash.length > 64) {
-      setDocHash(docHash.substring(0, 64))
+    const hash = docHash
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '')
+      .substring(0, 64)
+
+    if (hash !== docHash) {
+      setDocHash(hash)
     }
-    setDocHashHelperText(`${docHash.length}/64 characters`)
+
+    setDocHashHelperText(`${docHash.length}/64 hex characters (0-9a-f)`)
     // eslint-disable-next-line
   }, [docHash])
 
@@ -67,15 +72,15 @@ const AssetRegister: React.FC = () => {
     // eslint-disable-next-line
   }, [docOwner])
 
-   useEffect(() => {
-     validateForm()
+  useEffect(() => {
+    validateForm()
     // eslint-disable-next-line
   }, [docHash, docOwner])
 
   const validateForm = () => {
-    setFormValid((docOwner.length > 0 && docHash.length == 64))
-  } 
-  
+    setFormValid((docOwner.length > 0 && docHash.length === 64))
+  }
+
   return (
     <Layout selected="register">
       <div>
@@ -91,6 +96,7 @@ const AssetRegister: React.FC = () => {
             margin="normal"
             variant="outlined"
             helperText={docHashHelperText}
+            required
           />
           <TextField
             label="Document owner"
@@ -100,6 +106,7 @@ const AssetRegister: React.FC = () => {
             margin="normal"
             variant="outlined"
             helperText={docOwnerHelperText}
+            required
           />
           <Button
             variant="contained"
