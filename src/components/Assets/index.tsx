@@ -7,6 +7,7 @@ const Assets: React.FC = () => {
       <Layout selected="assets">
           <div>
               ASSETS
+              
           </div>
       </Layout>
     )
