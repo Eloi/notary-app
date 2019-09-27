@@ -19,6 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import HomeIcon from '@material-ui/icons/Home'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
 import ViewListIcon from '@material-ui/icons/ViewList'
+import SearchIcon from '@material-ui/icons/Search'
 import FiberNewIcon from '@material-ui/icons/FiberNew'
 
 import { RouteComponentProps } from "react-router-dom"
@@ -157,8 +158,15 @@ const Layout: React.FC<Props> = (props) => {
             </ListItem>
             <ListItem button key='assets' selected={props.selected === 'assets'} onClick={() => navigateTo('assets')}>
               <ListItemIcon><ViewListIcon /></ListItemIcon>
-              <ListItemText primary="Assets" />
+              <ListItemText primary="Asset info" />
             </ListItem>
+            {/*
+            // DISABLED, WORK IN PROGRESS 
+              <ListItem button key='search' selected={props.selected === 'search'} onClick={() => navigateTo('search')}>
+              <ListItemIcon><SearchIcon /></ListItemIcon>
+              <ListItemText primary="Search" />
+            </ListItem>             
+            */}
             <ListItem button key='recent' selected={props.selected === 'recent'} onClick={() => navigateTo('recent')}>
               <ListItemIcon><FiberNewIcon /></ListItemIcon>
               <ListItemText primary="Recent" />

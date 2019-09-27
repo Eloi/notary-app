@@ -6,7 +6,7 @@ const AssetsRecent: React.FC = () => {
     return (
       <Layout selected="recent">
           <div>
-              RECENT
+              RECENT (WORK IN PROGRESS)
           </div>
       </Layout>
     )

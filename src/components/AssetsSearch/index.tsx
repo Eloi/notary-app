@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import CloudUploadIcon from '@material-ui/icons/CloudUpload'
+import SearchIcon from '@material-ui/icons/Search'
 
 import { buildNotaryContract } from '../../lib/web3/contract'
 import Layout from '../Layout'
@@ -40,14 +40,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const AssetRegister: React.FC = () => {
+const AssetsSearch: React.FC = () => {
 
   const classes = useStyles();
 
-  const [docHash, setDocHash] = useState('')
   const [docOwner, setDocOwner] = useState('')
 
-  const [docHashHelperText, setDocHashHelperText] = useState('')
   const [docOwnerHelperText, setDocOwnerHelperText] = useState('')
 
   const [formValid, setFormValid] = useState(false)
@@ -55,7 +53,8 @@ const AssetRegister: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState('')
   
-  //const [contract, setContract] = useState(null)
+  const [search, setSearch] = useState('')
+
 
   useEffect(() => {
     //const contract = buildNotaryContract("0x0d4f9651b432F709CBB5076e35BAC24B7068B2a5")
@@ -63,21 +62,6 @@ const AssetRegister: React.FC = () => {
     // eslint-disable-next-line
   }, [])
 
-
-
-  useEffect(() => {
-    const hash = docHash
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, '')
-      .substring(0, 64)
-
-    if (hash !== docHash) {
-      setDocHash(hash)
-    }
-
-    setDocHashHelperText(`${docHash.length}/64 hex characters (0-9a-f)`)
-    // eslint-disable-next-line
-  }, [docHash])
 
   useEffect(() => {
     if (docOwner.length > 80) {
@@ -90,27 +74,32 @@ const AssetRegister: React.FC = () => {
   useEffect(() => {
     validateForm()
     // eslint-disable-next-line
-  }, [docHash, docOwner])
+  }, [docOwner])
 
   const validateForm = () => {
-    setFormValid((docOwner.length > 0 && docHash.length === 64))
+    setFormValid((docOwner.length > 0))
   }
 
   const onSubmit = () => {
     const contract = buildNotaryContract("0x0d4f9651b432F709CBB5076e35BAC24B7068B2a5")
     window.contractDebug = contract
+    setSearch('')
     console.log("SUBMIT", contract)
     if (contract) {
-      contract.methods.registerDocument(`0x${docHash}`, docOwner)
+      contract.methods.getDocumentHashesByOwner(docOwner)
         .send(contract.options.from)
         .once('transactionHash', (hash : any) => { console.log("hash",hash) })
-        .once('receipt', (receipt  : any) => { console.log("receipt",receipt) })
-        .on('confirmation', (confNumber : any, receipt : any) => { console.log("confNumber, receipt",confNumber, receipt) })
+        .once('receipt', (receipt  : any) => { 
+          console.log("receipt",receipt, receipt.transactionHash)
+        })
+        .on('confirmation', (confNumber : any, receipt : any) => {
+          console.log("CONFIRMATION: confNumber, receipt",confNumber, receipt)
+          setSearch(search + ' - ' + receipt.transactionHash)
+        })
         .on('error', (error : any) => { console.log("error",error) })
         .then((receipt : any) => {
-          console.log("RECEIPT OK", receipt)
+          console.log("RECEIPT OK", receipt, search)
           setShowSuccess(true)
-          setDocHash('')
         })
         .catch((error : any) => {
           console.log("RECEIPT ERROR", error)
@@ -120,10 +109,10 @@ const AssetRegister: React.FC = () => {
   }
 
   return (
-    <Layout selected="register">
+    <Layout selected="search">
       <div>
         <Typography variant="h2" component="h2">
-          Register a new asset
+          Assets
         </Typography>
         <form
           className={classNames(classes.container, classes.dense)}
@@ -131,17 +120,7 @@ const AssetRegister: React.FC = () => {
           autoComplete="off"
         >
           <TextField
-            label="Document hash"
-            className={classes.textField}
-            value={docHash}
-            onChange={(event) => setDocHash(event.target.value)}
-            margin="normal"
-            variant="outlined"
-            helperText={docHashHelperText}
-            required
-          />
-          <TextField
-            label="Document owner"
+            label="Owner"
             className={classes.textField}
             value={docOwner}
             onChange={(event) => setDocOwner(event.target.value)}
@@ -156,22 +135,22 @@ const AssetRegister: React.FC = () => {
             color="default"
             disabled={!formValid}
             className={classNames(classes.submitButton, classes.dense)}>
-            Register
-            <CloudUploadIcon className={classes.rightIcon} />
+            Search
+            <SearchIcon className={classes.rightIcon} />
           </Button>
         </form>
       </div>
       { showSuccess &&
         <Snackbar
           variant="success"
-          message="Asset registered"
+          message={`Search results: ${search}`}
           onClose={() => setShowSuccess(false)}
         />
       }
       { showError.length > 0 &&
         <Snackbar
           variant="error"
-          message={`Asset not registered, something happened (${showError})`}
+          message={`Search failed: (${showError})`}
           onClose={() => setShowError('')}
           />
       }
@@ -179,4 +158,4 @@ const AssetRegister: React.FC = () => {
   )
 }
 
-export default AssetRegister
+export default AssetsSearch
