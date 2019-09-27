@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
 
+import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -24,6 +25,10 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
       width: 400,
+    },
+    paper: {
+      margin: theme.spacing(3),
+      padding: theme.spacing(1),
     },
     dense: {
       marginTop: theme.spacing(2),
@@ -54,16 +59,6 @@ const AssetRegister: React.FC = () => {
 
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState('')
-  
-  //const [contract, setContract] = useState(null)
-
-  useEffect(() => {
-    //const contract = buildNotaryContract("0x0d4f9651b432F709CBB5076e35BAC24B7068B2a5")
-    //setContract(contract)
-    // eslint-disable-next-line
-  }, [])
-
-
 
   useEffect(() => {
     const hash = docHash
@@ -103,16 +98,16 @@ const AssetRegister: React.FC = () => {
     if (contract) {
       contract.methods.registerDocument(`0x${docHash}`, docOwner)
         .send(contract.options.from)
-        .once('transactionHash', (hash : any) => { console.log("hash",hash) })
-        .once('receipt', (receipt  : any) => { console.log("receipt",receipt) })
-        .on('confirmation', (confNumber : any, receipt : any) => { console.log("confNumber, receipt",confNumber, receipt) })
-        .on('error', (error : any) => { console.log("error",error) })
-        .then((receipt : any) => {
+        .once('transactionHash', (hash: any) => { console.log("hash", hash) })
+        .once('receipt', (receipt: any) => { console.log("receipt", receipt) })
+        .on('confirmation', (confNumber: any, receipt: any) => { console.log("confNumber, receipt", confNumber, receipt) })
+        .on('error', (error: any) => { console.log("error", error) })
+        .then((receipt: any) => {
           console.log("RECEIPT OK", receipt)
           setShowSuccess(true)
           setDocHash('')
         })
-        .catch((error : any) => {
+        .catch((error: any) => {
           console.log("RECEIPT ERROR", error)
           setShowError(`Error: ${error}`)
         })
@@ -121,60 +116,60 @@ const AssetRegister: React.FC = () => {
 
   return (
     <Layout selected="register">
-      <div>
         <Typography variant="h2" component="h2">
           Register a new asset
         </Typography>
-        <form
-          className={classNames(classes.container, classes.dense)}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField
-            label="Document hash"
-            className={classes.textField}
-            value={docHash}
-            onChange={(event) => setDocHash(event.target.value)}
-            margin="normal"
-            variant="outlined"
-            helperText={docHashHelperText}
-            required
-          />
-          <TextField
-            label="Document owner"
-            className={classes.textField}
-            value={docOwner}
-            onChange={(event) => setDocOwner(event.target.value)}
-            margin="normal"
-            variant="outlined"
-            helperText={docOwnerHelperText}
-            required
-          />
-          <Button
-            onClick={onSubmit}
-            variant="contained"
-            color="default"
-            disabled={!formValid}
-            className={classNames(classes.submitButton, classes.dense)}>
-            Register
+        <Paper className={classes.paper}>
+          <form
+            className={classNames(classes.container, classes.dense)}
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              label="Document hash"
+              className={classes.textField}
+              value={docHash}
+              onChange={(event) => setDocHash(event.target.value)}
+              margin="normal"
+              variant="outlined"
+              helperText={docHashHelperText}
+              required
+            />
+            <TextField
+              label="Document owner"
+              className={classes.textField}
+              value={docOwner}
+              onChange={(event) => setDocOwner(event.target.value)}
+              margin="normal"
+              variant="outlined"
+              helperText={docOwnerHelperText}
+              required
+            />
+            <Button
+              onClick={onSubmit}
+              variant="contained"
+              color="default"
+              disabled={!formValid}
+              className={classNames(classes.submitButton, classes.dense)}>
+              Register
             <CloudUploadIcon className={classes.rightIcon} />
-          </Button>
-        </form>
-      </div>
-      { showSuccess &&
-        <Snackbar
-          variant="success"
-          message="Asset registered"
-          onClose={() => setShowSuccess(false)}
-        />
-      }
-      { showError.length > 0 &&
-        <Snackbar
-          variant="error"
-          message={`Asset not registered, something happened (${showError})`}
-          onClose={() => setShowError('')}
+            </Button>
+          </form>
+        </Paper>
+        {showSuccess &&
+          <Snackbar
+            variant="success"
+            message="Asset registered"
+            onClose={() => setShowSuccess(false)}
           />
-      }
+        }
+        {showError.length > 0 &&
+          <Snackbar
+            variant="error"
+            message={`Asset not registered, something happened (${showError})`}
+            onClose={() => setShowError('')}
+          />
+        }
     </Layout>
   )
 }

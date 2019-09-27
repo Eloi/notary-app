@@ -50,13 +50,16 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     table: {
     },
+    paper: {
+      margin: theme.spacing(3),
+      padding: theme.spacing(1),
+    },
   }),
 )
 
 interface DispatchProps {
   fetchAsset: (docHash: string) => void,
   contractClear: () => void
-
 }
 
 interface StateProps {
@@ -146,7 +149,7 @@ const Assets: React.FC<Props> = (props) => {
                   {a.owner}
                 </TableCell>
                 <TableCell align="right">
-                  {(new Date(a.timestamp*1000)).toString()}
+                  {(new Date(a.timestamp * 1000)).toString()}
                 </TableCell>
               </TableRow>
             ))}
@@ -158,10 +161,10 @@ const Assets: React.FC<Props> = (props) => {
 
   return (
     <Layout selected="assets">
-      <div>
-        <Typography variant="h2" component="h2">
-          Asset info
+      <Typography variant="h2" component="h2">
+        Asset info
         </Typography>
+      <Paper className={classes.paper}>
         <form
           className={classNames(classes.container, classes.dense)}
           noValidate
@@ -187,7 +190,7 @@ const Assets: React.FC<Props> = (props) => {
             <SearchIcon className={classes.rightIcon} />
           </Button>
         </form>
-      </div>
+      </Paper>
       {!isLoading && asset &&
         renderAssets([asset])
       }

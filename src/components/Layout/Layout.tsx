@@ -19,7 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import HomeIcon from '@material-ui/icons/Home'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
 import ViewListIcon from '@material-ui/icons/ViewList'
-import SearchIcon from '@material-ui/icons/Search'
+//import SearchIcon from '@material-ui/icons/Search'
 import FiberNewIcon from '@material-ui/icons/FiberNew'
 
 import { RouteComponentProps } from "react-router-dom"
