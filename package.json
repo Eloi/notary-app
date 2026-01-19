@@ -19,7 +19,7 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "typescript": "3.6.3",
-    "web3": "^1.2.1"
+    "web3": "^4.16.0"
   },
   "scripts": {
     "start": "react-scripts start",
